@@ -30,4 +30,4 @@ Original code and documentation use the repository's MIT license. The three evid
 3. Build a Windows executable in a clean environment; run its help, plan and negative tests on a machine without the research workspace.
 4. Obtain a new live N986B send receipt, TWRP screen/touch observation, A/B Upload capture and post-run Android state using that exact executable hash.
 5. Audit staged files for device serials, personal paths, firmware/ECT/TWRP blobs and license notices. Include only approved photographs and derived evidence.
-6. Tag a release only after the live executable run passes. Document where users obtain the required image inputs and their hashes.
+6. Label host-tested executable assets as prerelease candidates with their missing inputs and live-validation status. Promote to a stable release only after the exact executable passes a live N986B run and A/B Upload check. Document where users obtain the required image inputs and their hashes.
