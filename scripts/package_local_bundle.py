@@ -91,7 +91,9 @@ def _candidate_entries(source: zipfile.ZipFile) -> dict[str, zipfile.ZipInfo]:
         raise ValueError("launcher ZIP is incomplete: " + ", ".join(sorted(missing)))
     # The package must contain the launcher built from this exact source tree.
     current_script = Path(ramboot.__file__).read_bytes()
-    if hashlib.sha256(source.read("scripts/ramboot.py")).digest() != hashlib.sha256(current_script).digest():
+    normalize_lines = lambda data: data.replace(b"\r\n", b"\n")
+    if (hashlib.sha256(normalize_lines(source.read("scripts/ramboot.py"))).digest()
+            != hashlib.sha256(normalize_lines(current_script)).digest()):
         raise ValueError("launcher ZIP was built from a different ramboot.py; rebuild the EXE first")
     sums = source.read("SHA256SUMS.txt").decode("ascii")
     expected_sums = {

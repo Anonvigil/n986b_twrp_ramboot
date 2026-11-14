@@ -87,6 +87,17 @@ class PackageLocalBundleTests(unittest.TestCase):
                     pack.package_local_bundle(candidate, None, artifacts, output)
             self.assertFalse(output.exists())
 
+    def test_accepts_windows_line_endings_from_ci_checkout(self):
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            windows_source = Path(ramboot.__file__).read_bytes().replace(b"\n", b"\r\n")
+            candidate = self._candidate(base, script_bytes=windows_source)
+            artifacts = self._fake_artifacts(base)
+            output = base / "complete.zip"
+            with mock.patch.object(pack, "verify_artifacts"):
+                pack.package_local_bundle(candidate, None, artifacts, output)
+            self.assertTrue(output.is_file())
+
     def test_rejects_unsafe_or_private_candidate_paths(self):
         for unsafe in ("../escape.txt", "private/adb.json", "C:/host/file", "artifacts/old.fd"):
             with self.subTest(unsafe=unsafe), tempfile.TemporaryDirectory() as directory:
