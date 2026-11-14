@@ -1,0 +1,254 @@
+{
+  "capture_integrity": "pass",
+  "source_stream_sha256": "46cbff933e3c5b003ee10ffee96c1764d24f154ad6d18d7073aee0070a09a084",
+  "captured_stream_sha256": "46cbff933e3c5b003ee10ffee96c1764d24f154ad6d18d7073aee0070a09a084",
+  "stream_a_b_equal": true,
+  "stream_source_exact_full": true,
+  "sec_debug_interval": [
+    "0x91200000",
+    "0x92200000"
+  ],
+  "sec_debug_header_a_b_equal": true,
+  "sec_debug_header_magic": true,
+  "uefi_marker_a_b_equal": true,
+  "uefi_stage_slot12": {
+    "a": "0x986b5402",
+    "b": "0x986b5402"
+  },
+  "ebs_success_marker_preserved": true,
+  "pre_ebs_marker_preserved": false,
+  "uefi_timer_stage_slot13": {
+    "a": "0x986b5608",
+    "b": "0x986b5608"
+  },
+  "uefi_timer_stage_known": true,
+  "uefi_raw_cntfrq_slot14": {
+    "a": 0,
+    "b": 0
+  },
+  "uefi_cntfrq_expected": true,
+  "uefi_cntvct_delta_slot15": {
+    "a": 19754,
+    "b": 19754
+  },
+  "uefi_cntvct_advanced": true,
+  "uefi_marker_interpretation": "unattributed: S-Boot may preserve stale 0x95E00000 values; a marker alone never proves this run entered Linux",
+  "linux_execution_inferred_from_ebs_marker": false,
+  "destination_headers_a_b_equal": true,
+  "destination_hints": {
+    "kernel_entry_first64_match_source": true,
+    "kernel_entry_arm64_magic": true,
+    "initrd_gzip_magic": false,
+    "fdt_magic": true,
+    "fdt_runtime_a_b_equal": true,
+    "ect_runtime_a_b_equal": true,
+    "ect_runtime_source_exact": true,
+    "fmp_off_no_debug_gmc_profiler_dpp6_bootargs_in_runtime_fdt": true
+  },
+  "strict_fdt_gate": "pass",
+  "strict_fdt_error": null,
+  "pdp_off_runtime_delta": {
+    "only_runtime_property_delta": "/chosen/linux,initrd-end:-87_bytes_from_tenth",
+    "bootargs_tenth_token_preserved": true,
+    "initrd_start": "0xa4000000",
+    "initrd_old_bytes": 1082618,
+    "initrd_new_bytes": 1082531,
+    "tenth_live_fdt_sha256": "9a6734545ad2af6c40204b8e9ce1da54a9897dcff4c2df44eb3f529f8962f3dc",
+    "full_fdt_byte_exact_delta": true,
+    "fb_handover_six_props_preserved": true,
+    "memreserve_identical": true,
+    "baseline_capture_sha256": "4b17bf968e1acbfe8c535af0757651b066e29b9ca0520174d83911d4e7db0c6a"
+  },
+  "parsed_bootargs": "rdinit=/init ro nokaslr sec_debug_next=0x1000000@0x91200000 initcall_blacklist=exynos_deliver_el2_crash_info,exynos_s2mpufd_init,exynos_gpu_cooling_init,samsung_abox_pci_driver_init,samsung_abox_driver_init,exynos_perf_gmc_init,exynos_gpu_profiler_init,dhd_module_init,sensor_ois_mcu_init,sensor_paf_pdp_init console=ttySAC0,115200n8 loglevel=8 panic=-1",
+  "parsed_reservations": [
+    [
+      "0xa0000000",
+      "0x3000000"
+    ],
+    [
+      "0xa4000000",
+      "0x200000"
+    ],
+    [
+      "0xa6000000",
+      "0x200000"
+    ],
+    [
+      "0x95e00000",
+      "0x1000"
+    ],
+    [
+      "0x92200000",
+      "0x3890000"
+    ],
+    [
+      "0xa7000000",
+      "0x50000"
+    ]
+  ],
+  "ect_source_exact_a_b_gate": "pass",
+  "fmp_off_no_debug_gmc_profiler_dpp6_gate": "pass",
+  "capture_integrity_failure_interpretation": "No Linux execution attribution when capture_integrity is failed; EBS markers can be stale",
+  "el0_marker_absent_from_sent_stream_and_fd": true,
+  "el0_witness_scan_windows": [
+    {
+      "label": "witness_a0",
+      "start": "0xa0000000",
+      "end_exclusive": "0xa1000000",
+      "a_b_equal": true,
+      "a_hits": 0,
+      "b_hits": 0
+    },
+    {
+      "label": "witness_a1",
+      "start": "0xa1000000",
+      "end_exclusive": "0xa2000000",
+      "a_b_equal": true,
+      "a_hits": 3,
+      "b_hits": 3
+    },
+    {
+      "label": "witness_a2",
+      "start": "0xa2000000",
+      "end_exclusive": "0xa3000000",
+      "a_b_equal": true,
+      "a_hits": 4,
+      "b_hits": 4
+    },
+    {
+      "label": "witness_a3",
+      "start": "0xa3000000",
+      "end_exclusive": "0xa4000000",
+      "a_b_equal": true,
+      "a_hits": 0,
+      "b_hits": 0
+    },
+    {
+      "label": "witness_a4",
+      "start": "0xa4000000",
+      "end_exclusive": "0xa5000000",
+      "a_b_equal": true,
+      "a_hits": 0,
+      "b_hits": 0
+    },
+    {
+      "label": "witness_a5",
+      "start": "0xa5000000",
+      "end_exclusive": "0xa6000000",
+      "a_b_equal": true,
+      "a_hits": 0,
+      "b_hits": 0
+    },
+    {
+      "label": "witness_a6",
+      "start": "0xa6000000",
+      "end_exclusive": "0xa7000000",
+      "a_b_equal": true,
+      "a_hits": 0,
+      "b_hits": 0
+    },
+    {
+      "label": "witness_ba",
+      "start": "0xba000000",
+      "end_exclusive": "0xbab00000",
+      "a_b_equal": true,
+      "a_hits": 0,
+      "b_hits": 0
+    }
+  ],
+  "el0_witness_a_b_physical_hits": [
+    {
+      "physical_address": "0xa1d994ee",
+      "window": "witness_a1"
+    },
+    {
+      "physical_address": "0xa1d99aff",
+      "window": "witness_a1"
+    },
+    {
+      "physical_address": "0xa1d99b36",
+      "window": "witness_a1"
+    },
+    {
+      "physical_address": "0xa2552eab",
+      "window": "witness_a2"
+    },
+    {
+      "physical_address": "0xa2553c27",
+      "window": "witness_a2"
+    },
+    {
+      "physical_address": "0xa25552bb",
+      "window": "witness_a2"
+    },
+    {
+      "physical_address": "0xa255532b",
+      "window": "witness_a2"
+    }
+  ],
+  "el0_executed_evidence": true,
+  "fbinput_kmsg_a_b_equal": true,
+  "fbinput_kmsg_records_a": [
+    "n986b-fbinput: devtmpfs mount: ok",
+    "n986b-fbinput: N986B-FBINPUT-EL0-20261108-7C4E90 phase=mounted pid=1; kernel-log inventory begins",
+    "n986b-fbinput: --- cmdline: /proc/cmdline ---",
+    "n986b-fbinput: sample cmdline /proc/cmdline: rdinit=/init ro nokaslr sec_debug_next=0x1000000@0x91200000 initcall_blacklist=exynos_deliver_el2_crash_info,exynos_s2mpufd_init",
+    "n986b-fbinput: --- framebuffer_list: /proc/fb ---",
+    "n986b-fbinput: sample framebuffer_list /proc/fb: 0 ",
+    "n986b-fbinput: --- input_devices: /proc/bus/input/devices ---",
+    "n986b-fbinput: sample input_devices /proc/bus/input/devices: I: Bus=0000 Vendor=0000 Product=0000 Version=0000",
+    "n986b-fbinput: --- graphics: /sys/class/graphics/fb0/name ---",
+    "n986b-fbinput: sample graphics /sys/class/graphics/fb0/name: ",
+    "n986b-fbinput: --- graphics: /sys/class/graphics/fb0/modes ---",
+    "n986b-fbinput: sample graphics /sys/class/graphics/fb0/modes: U:1440x3088p-0\ufffd\ufffd\ufffd\ufffd\f",
+    "n986b-fbinput: --- graphics: /sys/class/graphics/fb0/mode ---",
+    "n986b-fbinput: sample graphics /sys/class/graphics/fb0/mode: ",
+    "n986b-fbinput: --- graphics: /sys/class/graphics/fb0/virtual_size ---",
+    "n986b-fbinput: sample graphics /sys/class/graphics/fb0/virtual_size: 1440,6176",
+    "n986b-fbinput: --- graphics: /sys/class/graphics/fb0/bits_per_pixel ---",
+    "n986b-fbinput: sample graphics /sys/class/graphics/fb0/bits_per_pixel: 32",
+    "n986b-fbinput: --- graphics: /sys/class/graphics/fb0/stride ---",
+    "n986b-fbinput: sample graphics /sys/class/graphics/fb0/stride: 5760",
+    "n986b-fbinput: --- graphics: /sys/class/graphics/fb0/blank ---",
+    "n986b-fbinput: sample graphics /sys/class/graphics/fb0/blank: ",
+    "n986b-fbinput: device node[1]: /dev/fb0",
+    "n986b-fbinput: device node[2]: /dev/input/event0\ufffd1%\ufffd\f",
+    "n986b-fbinput: device node[3]: /dev/input/event16L\ufffd\ufffd\f",
+    "n986b-fbinput: device node[4]: /dev/input/event2",
+    "n986b-fbinput: device node[5]: /dev/input/event3av\ufffd\ufffd\f",
+    "n986b-fbinput: device node[6]: /dev/input/event4o\ufffd\t\ufffd\f",
+    "n986b-fbinput: device node[7]: /dev/input/event5\f\ufffd\ufffd\ufffd\f",
+    "n986b-fbinput: device node[8]: /dev/input/event6\ufffdY\ufffd\ufffd\f",
+    "n986b-fbinput: device node[9]: /dev/input/event7F\ufffdw\ufffd\f",
+    "n986b-fbinput: device node[10]: /dev/input/event8",
+    "n986b-fbinput: device node[11]: /dev/input/event9",
+    "n986b-fbinput: N986B-FBINPUT-EL0-20261108-7C4E90 device_node_count=11",
+    "n986b-fbinput: --- input_name: /sys/class/input/event0/device/name ---",
+    "n986b-fbinput: sample input_name /sys/class/input/event0/device/name: meta_event\ufffd\u0017\ufffd\ufffd\f",
+    "n986b-fbinput: --- input_name: /sys/class/input/event1/device/name ---",
+    "n986b-fbinput: sample input_name /sys/class/input/event1/device/name: gpio_keys",
+    "n986b-fbinput: --- input_name: /sys/class/input/event2/device/name ---",
+    "n986b-fbinput: sample input_name /sys/class/input/event2/device/name: sec_touchscreen",
+    "n986b-fbinput: --- input_name: /sys/class/input/event3/device/name ---",
+    "n986b-fbinput: sample input_name /sys/class/input/event3/device/name: sec_touchpad",
+    "n986b-fbinput: --- input_name: /sys/class/input/event4/device/name ---",
+    "n986b-fbinput: sample input_name /sys/class/input/event4/device/name: sec_touchproximity.\t2\u0011\r",
+    "n986b-fbinput: --- input_name: /sys/class/input/event5/device/name ---",
+    "n986b-fbinput: sample input_name /sys/class/input/event5/device/name: sec_e-pen",
+    "n986b-fbinput: --- input_name: /sys/class/input/event6/device/name ---",
+    "n986b-fbinput: sample input_name /sys/class/input/event6/device/name: grip_sensor",
+    "n986b-fbinput: --- input_name: /sys/class/input/event7/device/name ---",
+    "n986b-fbinput: sample input_name /sys/class/input/event7/device/name: ssp_context",
+    "n986b-fbinput: --- input_name: /sys/class/input/event8/device/name ---",
+    "n986b-fbinput: sample input_name /sys/class/input/event8/device/name: hall",
+    "n986b-fbinput: --- input_name: /sys/class/input/event9/device/name ---",
+    "n986b-fbinput: sample input_name /sys/class/input/event9/device/name: certify_hall",
+    "n986b-fbinput: N986B-FBINPUT-EL0-20261108-7C4E90 input_sysfs_count=10",
+    "n986b-fbinput: N986B-FBINPUT-EL0-20261108-7C4E90 phase=complete pid=1; halted in RAM"
+  ],
+  "fbinput_kmsg_records_b_count": 56,
+  "fbinput_el0_kmsg_proof": true,
+  "el0_absence_interpretation": "inconclusive outside scanned windows",
+  "branch_marker_mirror_at_0x95d00000": false,
+  "persistent_storage_commands": false
+}

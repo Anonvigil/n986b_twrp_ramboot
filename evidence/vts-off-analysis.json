@@ -1,0 +1,199 @@
+{
+  "capture_integrity": "pass",
+  "source_stream_sha256": "c5a780ba3ea7ee616825c29043ec22360591be111c864180db6134c1910b335f",
+  "captured_stream_sha256": "c5a780ba3ea7ee616825c29043ec22360591be111c864180db6134c1910b335f",
+  "stream_a_b_equal": true,
+  "stream_source_exact_full": true,
+  "sec_debug_interval": [
+    "0x91200000",
+    "0x92200000"
+  ],
+  "sec_debug_header_a_b_equal": true,
+  "sec_debug_header_magic": true,
+  "uefi_marker_a_b_equal": true,
+  "uefi_stage_slot12": {
+    "a": "0x986b5402",
+    "b": "0x986b5402"
+  },
+  "ebs_success_marker_preserved": true,
+  "pre_ebs_marker_preserved": false,
+  "uefi_timer_stage_slot13": {
+    "a": "0x986b5608",
+    "b": "0x986b5608"
+  },
+  "uefi_timer_stage_known": true,
+  "uefi_raw_cntfrq_slot14": {
+    "a": 0,
+    "b": 0
+  },
+  "uefi_cntfrq_expected": true,
+  "uefi_cntvct_delta_slot15": {
+    "a": 19754,
+    "b": 19754
+  },
+  "uefi_cntvct_advanced": true,
+  "uefi_marker_interpretation": "unattributed: S-Boot may preserve stale 0x95E00000 values; a marker alone never proves this run entered Linux",
+  "linux_execution_inferred_from_ebs_marker": false,
+  "destination_headers_a_b_equal": true,
+  "destination_hints": {
+    "kernel_entry_first64_match_source": true,
+    "kernel_entry_arm64_magic": true,
+    "initrd_gzip_magic": false,
+    "fdt_magic": true,
+    "fdt_runtime_a_b_equal": true,
+    "ect_runtime_a_b_equal": true,
+    "ect_runtime_source_exact": true,
+    "fmp_off_no_debug_gmc_profiler_dpp6_bootargs_in_runtime_fdt": true
+  },
+  "strict_fdt_gate": "pass",
+  "strict_fdt_error": null,
+  "vts_off_runtime_delta": {
+    "only_runtime_property_delta": "/vts@0x15510000/status:okay->disabled",
+    "nodes_all_other_properties_exact": true,
+    "fb_handover_six_props_preserved": true,
+    "ten_token_bootargs_preserved": true,
+    "memreserve_identical": true,
+    "packed_size_delta": 4,
+    "prior_fbio_live_fdt_sha256": "83975c92dffc9ee3965eeafbf008bfa6377fc8b137a72a8c5aa01f38b2062428"
+  },
+  "parsed_bootargs": "rdinit=/init ro nokaslr sec_debug_next=0x1000000@0x91200000 initcall_blacklist=exynos_deliver_el2_crash_info,exynos_s2mpufd_init,exynos_gpu_cooling_init,samsung_abox_pci_driver_init,samsung_abox_driver_init,exynos_perf_gmc_init,exynos_gpu_profiler_init,dhd_module_init,sensor_ois_mcu_init,sensor_paf_pdp_init console=ttySAC0,115200n8 loglevel=8 panic=-1",
+  "parsed_reservations": [
+    [
+      "0xa0000000",
+      "0x3000000"
+    ],
+    [
+      "0xa4000000",
+      "0x200000"
+    ],
+    [
+      "0xa6000000",
+      "0x200000"
+    ],
+    [
+      "0x95e00000",
+      "0x1000"
+    ],
+    [
+      "0x92200000",
+      "0x3890000"
+    ],
+    [
+      "0xa7000000",
+      "0x50000"
+    ]
+  ],
+  "ect_source_exact_a_b_gate": "pass",
+  "fmp_off_no_debug_gmc_profiler_dpp6_gate": "pass",
+  "capture_integrity_failure_interpretation": "No Linux execution attribution when capture_integrity is failed; EBS markers can be stale",
+  "el0_marker_absent_from_sent_stream_and_fd": true,
+  "el0_witness_scan_windows": [
+    {
+      "label": "witness_a0",
+      "start": "0xa0000000",
+      "end_exclusive": "0xa1000000",
+      "a_b_equal": true,
+      "a_hits": 0,
+      "b_hits": 0
+    },
+    {
+      "label": "witness_a1",
+      "start": "0xa1000000",
+      "end_exclusive": "0xa2000000",
+      "a_b_equal": true,
+      "a_hits": 2,
+      "b_hits": 2
+    },
+    {
+      "label": "witness_a2",
+      "start": "0xa2000000",
+      "end_exclusive": "0xa3000000",
+      "a_b_equal": true,
+      "a_hits": 2,
+      "b_hits": 2
+    },
+    {
+      "label": "witness_a3",
+      "start": "0xa3000000",
+      "end_exclusive": "0xa4000000",
+      "a_b_equal": true,
+      "a_hits": 0,
+      "b_hits": 0
+    },
+    {
+      "label": "witness_a4",
+      "start": "0xa4000000",
+      "end_exclusive": "0xa5000000",
+      "a_b_equal": true,
+      "a_hits": 0,
+      "b_hits": 0
+    },
+    {
+      "label": "witness_a5",
+      "start": "0xa5000000",
+      "end_exclusive": "0xa6000000",
+      "a_b_equal": true,
+      "a_hits": 0,
+      "b_hits": 0
+    },
+    {
+      "label": "witness_a6",
+      "start": "0xa6000000",
+      "end_exclusive": "0xa7000000",
+      "a_b_equal": true,
+      "a_hits": 0,
+      "b_hits": 0
+    },
+    {
+      "label": "witness_ba",
+      "start": "0xba000000",
+      "end_exclusive": "0xbab00000",
+      "a_b_equal": true,
+      "a_hits": 0,
+      "b_hits": 0
+    }
+  ],
+  "el0_witness_a_b_physical_hits": [
+    {
+      "physical_address": "0xa1c6300f",
+      "window": "witness_a1"
+    },
+    {
+      "physical_address": "0xa1c6341a",
+      "window": "witness_a1"
+    },
+    {
+      "physical_address": "0xa254f7a0",
+      "window": "witness_a2"
+    },
+    {
+      "physical_address": "0xa25519dc",
+      "window": "witness_a2"
+    }
+  ],
+  "el0_executed_evidence": true,
+  "fbioctl_kmsg_a_b_equal": true,
+  "fbioctl_kmsg_records_a": [
+    "n986b-fbioctl: N986B-FBIOCTL-EL0-20261108-2B31A7 phase=start bounded read-only ioctl probe",
+    "n986b-fbioctl: fb0 open O_RDONLY ok",
+    "n986b-fbioctl: FBIOGET_FSCREENINFO ok id= smem_len=35573760 line_length=5760",
+    "n986b-fbioctl: FBIOGET_VSCREENINFO ok xres=1440 yres=3088 xvirt=1440 yvirt=6176 bpp=32",
+    "n986b-fbioctl: mmap fb0 PROT_READ MAP_SHARED bytes=4096 ok munmap=ok",
+    "n986b-fbioctl: fb0 open O_RDWR ok",
+    "n986b-fbioctl: mmap fb0 PROT_READ|PROT_WRITE MAP_SHARED bytes=4096 no pixel access ok munmap=ok",
+    "n986b-fbioctl: event2 open O_RDONLY ok",
+    "n986b-fbioctl: EVIOCGNAME ok name=sec_touchscreen",
+    "n986b-fbioctl: EVIOCGBIT type ok EV_ABS=1",
+    "n986b-fbioctl: EVIOCGBIT ABS ok X=1 Y=1 MT_X=1 MT_Y=1",
+    "n986b-fbioctl: EVIOCGABS ABS_X ok value=0 min=0 max=4095 fuzz=0 flat=0 resolution=0",
+    "n986b-fbioctl: EVIOCGABS ABS_Y ok value=0 min=0 max=4095 fuzz=0 flat=0 resolution=0",
+    "n986b-fbioctl: EVIOCGABS ABS_MT_POSITION_X ok value=0 min=0 max=4095 fuzz=0 flat=0 resolution=0",
+    "n986b-fbioctl: EVIOCGABS ABS_MT_POSITION_Y ok value=0 min=0 max=4095 fuzz=0 flat=0 resolution=0",
+    "n986b-fbioctl: N986B-FBIOCTL-EL0-20261108-2B31A7 phase=complete"
+  ],
+  "fbioctl_kmsg_records_b_count": 16,
+  "fbioctl_el0_kmsg_proof": true,
+  "el0_absence_interpretation": "inconclusive outside scanned windows",
+  "branch_marker_mirror_at_0x95d00000": false,
+  "persistent_storage_commands": false
+}

@@ -1,0 +1,72 @@
+{
+  "schema": 1,
+  "profile": {
+    "model": "SM-N986B",
+    "bootloader": "N986BXXU0ATE3",
+    "resident_sboot_sha256": "d0f631d6320977c5b7509ff1457ee8c22878ca6b39619653c8361389c2fa3080"
+  },
+  "run_date_utc": "2026-11-08",
+  "artifacts": {
+    "N986B-TWRP-UI10V-VTS-OFF-RAM.fd": {
+      "size": 7340032,
+      "sha256": "0ac10b5ae7ed996102d4ff74ee8f0d2002d57088fa804c93a1d2b271ebb06c01"
+    },
+    "recovery-ui10v-ram-stream.bin": {
+      "size": 75890688,
+      "sha256": "d1bfd029728be897f6bc5721e1c1abfcab41b0a84d5ca20591b8ea0911304f7b"
+    },
+    "N986BUi10V.efi": {
+      "size": 360448,
+      "sha256": "a274548662f9c88167facf96e1bbe3aa0a7bedf2e2e0c7f589364af2abcd1fa5"
+    },
+    "n986b-twrp-ui10v-vts-disabled.dtb": {
+      "size": 528004,
+      "sha256": "f055c5915815a705f196fd236ff24856859092fc88fcb4a2be3fd0e2de148769"
+    },
+    "n986b-twrp-ui10v-ramdisk.cpio.gz": {
+      "size": 17667760,
+      "sha256": "078814b1c8bf94153a1cdda1a076161eb9f5ab68cf58acd7691076dee811f436"
+    }
+  },
+  "combined_fd_stream_sha256": "4affaa0cf66ba86538204699a7d5daed34a84f05052e8fac67b4791c0e45e82d",
+  "transport": {
+    "payload_packets": 162560,
+    "packet_bytes": 512,
+    "setup_outs": 9,
+    "terminal_outs": 1,
+    "out_acked": 162570,
+    "terminal_ascii": "UEFITERM"
+  },
+  "upload_capture": {
+    "capture_integrity": "pass",
+    "stream_a_b_source_exact": true,
+    "fd_after_sboot_reuse_a_b_source_exact": true,
+    "callback_a_b_source_exact": true,
+    "runtime_fdt_a_b_equal": true,
+    "runtime_vts_disabled": true,
+    "runtime_storage_nodes_disabled": true,
+    "valid_printk_records": 14717,
+    "recovery_service_started": true,
+    "later_recovery_task_records": true,
+    "custom_before_recovery_marker_found": false,
+    "custom_recovery_running_marker_found": false
+  },
+  "visual_result": {
+    "twrp_version": "3.7.0_11-0",
+    "main_menu_visible": true,
+    "touch_navigation_reported_and_supported_by_distinct_screens": true,
+    "mount_partition_list_empty": true,
+    "file_manager_dev_visible": true
+  },
+  "post_reset_android_reported": {
+    "sys.boot_completed": "1",
+    "ro.boot.warranty_bit": "0",
+    "ro.boot.verifiedbootstate": "green",
+    "ro.boot.debug_level": "0x4948"
+  },
+  "photos": {
+    "twrp-main.jpg": "4e7ceabbf2243b45d7b4ed004843155c1e5cfc53aab84adf87786ce0e04c1f65",
+    "twrp-mount.jpg": "c3d21699e5ede19d3e6253d919819e001db4ae0bbd17665209696e3b1d4d0ef2",
+    "twrp-file-manager.jpg": "dc98a087ece82ed49007f8c0e10b8e61676b0ef63f2591ba91c67509736e5bad"
+  }
+}
