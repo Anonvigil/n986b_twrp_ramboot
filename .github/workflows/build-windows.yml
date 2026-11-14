@@ -78,9 +78,10 @@ jobs:
           New-Item -ItemType Directory -Path $stage -Force | Out-Null
           Copy-Item -LiteralPath 'dist\N986B-TWRP-RAMBOOT.exe','dist\libusb-1.0.dll' -Destination $stage
           Copy-Item -LiteralPath 'README.md','NOTICE.md','LICENSE','requirements-build.txt' -Destination $stage
-          Copy-Item -LiteralPath 'docs','evidence','third_party' -Destination $stage -Recurse
+          Copy-Item -LiteralPath 'docs','evidence','third_party','sources' -Destination $stage -Recurse
           New-Item -ItemType Directory -Path (Join-Path $stage 'scripts') -Force | Out-Null
           Copy-Item -Path 'scripts/*.py' -Destination (Join-Path $stage 'scripts')
+          Copy-Item -Path 'scripts/*.ps1' -Destination (Join-Path $stage 'scripts')
           $checksums = @(
             Get-FileHash -LiteralPath (Join-Path $stage 'N986B-TWRP-RAMBOOT.exe') -Algorithm SHA256
             Get-FileHash -LiteralPath (Join-Path $stage 'libusb-1.0.dll') -Algorithm SHA256

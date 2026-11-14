@@ -175,6 +175,11 @@ class RambootOfflineTests(unittest.TestCase):
                  mock.patch.object(ramboot, "capture_adb_receipt", side_effect=AssertionError("ADB called")):
                 self.assertEqual(ramboot.main(["plan", "--artifacts", directory]), 2)
 
+    def test_missing_release_payload_has_actionable_error(self):
+        with tempfile.TemporaryDirectory() as directory:
+            with self.assertRaisesRegex(ValueError, "missing RAM boot files.*artifacts folder"):
+                ramboot.build_plan(Path(directory))
+
     def test_exact_usb_order_and_cleanup(self):
         usb = FakeUsb(terminal_disconnect=True)
         plan = SimpleNamespace(fd=b"A" * 1024, stream=b"", stage=ramboot.build_stage(),
@@ -227,6 +232,20 @@ class RambootOfflineTests(unittest.TestCase):
                  mock.patch("builtins.input", return_value="wrong"), \
                  mock.patch.object(ramboot, "execute", side_effect=AssertionError("USB called")):
                 self.assertEqual(ramboot.main(["launch"]), 2)
+
+    def test_fastboot_launch_without_adb_receipt_requires_confirmation(self):
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            plan = SimpleNamespace(info={"manifest_sha256": "0" * 64},
+                                   payload_packets=ramboot.PAYLOAD_PACKETS)
+            with mock.patch.object(ramboot, "release_root", return_value=base), \
+                 mock.patch.object(ramboot, "build_plan", return_value=plan), \
+                 mock.patch.object(ramboot, "validate_prior_evidence", return_value={}), \
+                 mock.patch("builtins.input", return_value="BOOT N986B"), \
+                 mock.patch.object(ramboot, "_send_after_preflight") as send:
+                self.assertEqual(ramboot.main(["launch"]), 0)
+            self.assertEqual(send.call_args.args[1]["profile_check"],
+                             "operator_confirmed_fastboot_only")
 
     @unittest.skipUnless(os.environ.get("N986B_UI10V_ARTIFACTS"),
                          "set N986B_UI10V_ARTIFACTS to the frozen local build directory")

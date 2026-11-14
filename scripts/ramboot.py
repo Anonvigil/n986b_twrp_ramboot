@@ -251,6 +251,11 @@ def _read_optional(folder: Path, filename: str, expected_sha: str,
 
 
 def build_plan(folder: Path) -> SimpleNamespace:
+    missing = [name for name in (FD_NAME, STREAM_NAME)
+               if not (folder / name).is_file()]
+    require(not missing,
+            f"missing RAM boot files in {folder}: {', '.join(missing)}. "
+            "Place the exact pinned files in the artifacts folder beside this EXE.")
     fd = (folder / FD_NAME).read_bytes()
     stream = (folder / STREAM_NAME).read_bytes()
     require(len(fd) == FD_BYTES and digest(fd) == FD_SHA256,
@@ -541,6 +546,8 @@ def main(argv: list[str] | None = None) -> int:
     preview.add_argument("--artifacts", type=Path,
                          default=release_root() / "artifacts")
     launch = commands.add_parser("launch", help="interactive Fastboot send using local files")
+    launch.add_argument("--artifacts", type=Path,
+                        default=release_root() / "artifacts")
     launch.add_argument("--timeout-ms", type=int, default=5000)
     send = commands.add_parser("send", help="explicit volatile Fastboot RAM send")
     send.add_argument("--artifacts", type=Path, required=True)
@@ -579,7 +586,7 @@ def main(argv: list[str] | None = None) -> int:
                               "captured_utc": receipt["captured_utc"],
                               "device_io": "read_only_adb"}, indent=2))
             return 0
-        artifact_dir = (release_root() / "artifacts") if args.command == "launch" else args.artifacts
+        artifact_dir = args.artifacts
         plan = build_plan(artifact_dir)
         report = plan_record(plan)
         if args.command == "plan":
@@ -591,15 +598,21 @@ def main(argv: list[str] | None = None) -> int:
             receipt_path = private / "adb.json"
             fbinput_path = release_root() / "evidence" / "fbinput-analysis.json"
             vts_path = release_root() / "evidence" / "vts-off-analysis.json"
-            validate_adb_receipt(json.loads(receipt_path.read_text(encoding="utf-8")))
+            if receipt_path.is_file():
+                validate_adb_receipt(json.loads(receipt_path.read_text(encoding="utf-8")))
+                profile_check = "fresh_android_adb_receipt"
+            else:
+                profile_check = "operator_confirmed_fastboot_only"
             proof = validate_prior_evidence(fbinput_path, vts_path)
             send_receipt = private / ("send-" + datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ") + ".json")
             require(not send_receipt.exists(), "send receipt path already exists")
-            print(json.dumps({**report, **proof, "device_io": False}, indent=2), flush=True)
-            print("This checks a prior Android receipt; the current S-Boot SHA cannot be read live here.")
+            print(json.dumps({**report, **proof, "device_io": False,
+                              "profile_check": profile_check}, indent=2), flush=True)
+            print("Fastboot does not expose the resident S-Boot SHA here. Confirm the phone is the tested SM-N986B / N986BXXU0ATE3 profile.")
             typed = input("Type BOOT N986B to transfer the pinned RAM image: ").strip()
             require(typed == "BOOT N986B", "typed Fastboot RAM send confirmation absent")
-            _send_after_preflight(plan, proof, send_receipt, args.timeout_ms)
+            _send_after_preflight(plan, {**proof, "profile_check": profile_check},
+                                  send_receipt, args.timeout_ms)
             return 0
         require(args.timeout_ms > 0, "timeout must be positive")
         require(not args.send_receipt.exists(), "send receipt path already exists")

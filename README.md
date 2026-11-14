@@ -28,15 +28,16 @@ The [Mount screen](evidence/photos/twrp-mount.jpg) and [File Manager in `/dev`](
 4. [Evidence and limits](docs/EVIDENCE.md)
 5. [Inputs, provenance and publication status](docs/SOURCES_AND_RELEASE.md)
 6. [Windows x86, x64 and Arm64 builds and USB setup](docs/WINDOWS.md)
+7. [EFI source recipe](sources/efi/README.md) and [TWRP stream reconstruction](sources/twrp/README.md)
 
 Run `python scripts/verify_public_evidence.py` to check the staged photos and public evidence manifest. If you hold the original local build outputs, `python scripts/verify_public_evidence.py --artifacts <directory>` also verifies the frozen FD, stream, EFI, FDT and initramfs hashes. This command performs no device I/O.
 
 ## Repository status
 
-This is a **launcher, documentation and evidence release candidate**. The new standalone launcher reproduces the pinned USB packet sequence and passes offline checks against the frozen UI10V bytes. It has not yet been run on the phone. The Linux/TWRP image, Samsung-derived DT/ECT material, raw RAM dumps and device receipts are not bundled here. A clean checkout cannot replay the boot until the exact private FD and stream are supplied locally. Independent source rebuilding also remains incomplete. The [release checklist](docs/SOURCES_AND_RELEASE.md) names the remaining work.
+This is a **launcher, source recipe, documentation and evidence release candidate**. The new standalone launcher reproduces the pinned USB packet sequence and passes offline checks against the frozen UI10V bytes. It has not yet been run on the phone. The Linux/TWRP image, Samsung-derived DT/ECT material, raw RAM dumps and device receipts are not bundled in the public repository or release. A clean checkout cannot replay the boot until the exact FD and stream are supplied locally. The EFI and stream recipes rebuild from separately supplied, hash-checked upstream and device inputs; an independent build of the official kernel and TWRP userspace remains unverified. The [release checklist](docs/SOURCES_AND_RELEASE.md) names the remaining work.
 
-Windows candidate ZIPs contain x86, x64 or arm64 launchers with matching libusb DLLs and the documentation. They require Android SDK Platform-Tools, a WinUSB-bound Fastboot interface, and the exact local FD/stream. See the [replay steps](docs/REPLAY.md).
+Windows candidate ZIPs contain x86, x64 or arm64 launchers with matching libusb DLLs and the documentation. A candidate ZIP alone is **not runnable**: its `artifacts/` payload is absent. With the exact successful files already held locally, run `scripts/package_local_bundle.py` or `scripts/build_local_windows.ps1` to create a private ZIP containing the launcher, DLL, FD and stream. The launcher then validates the payload before USB transfer. See the [replay steps](docs/REPLAY.md).
 
-The original TWRP image was obtained from [Team Win's `c2s` download page](https://dl.twrp.me/c2s/). Team Win's page asks users not to mirror its images. The recovery source is available from [Team Win](https://github.com/TeamWin/android_bootable_recovery). This repository does not redistribute a TWRP image.
+The original TWRP image was obtained from [Team Win's `c2s` download page](https://dl.twrp.me/c2s/). Team Win prohibits mirroring its images without written permission. The stream embeds that exact image, so the public release cannot include the successful stream without distribution rights. The recovery source is available from [Team Win](https://github.com/TeamWin/android_bootable_recovery).
 
 Original code and documentation are [MIT licensed](LICENSE); the three evidence photographs and all third-party inputs are excluded. See [source notices](NOTICE.md).

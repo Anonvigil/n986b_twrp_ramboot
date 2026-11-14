@@ -10,7 +10,7 @@ libusb-1.0.dll                    bundled with each Windows candidate ZIP
 evidence/
   fbinput-analysis.json
   vts-off-analysis.json
-artifacts/                        local private inputs; never commit
+artifacts/                        locally held payload; never commit
   N986B-TWRP-UI10V-VTS-OFF-RAM.fd
   recovery-ui10v-ram-stream.bin
   N986BUi10V.efi                  optional independent hash check
@@ -19,9 +19,17 @@ artifacts/                        local private inputs; never commit
 private/                          local receipts; never commit
 ```
 
-The FD and stream are required and their sizes/SHA-256 must match [`ui10v-public.json`](../evidence/ui10v-public.json). The stream contains TWRP userspace and is not redistributed here. The EXE does not create the image from the official `c2s` download. An exact UI10V image must be built or otherwise available locally; the current repository is not a source-complete image builder. The two evidence JSON files are included to preserve the exact prior A/B gates from the successful development sequence.
+The FD and stream are required and their sizes/SHA-256 must match [`ui10v-public.json`](../evidence/ui10v-public.json). The stream contains TWRP userspace and is not redistributed here. The EXE does not create the image from the official `c2s` download. The [EFI](../sources/efi/README.md) and [stream](../sources/twrp/README.md) recipes describe how to rebuild from separately obtained, hash-checked inputs. The two evidence JSON files preserve the prior A/B gates from the successful development sequence.
 
-## 1. Capture a fresh Android receipt
+The public release ZIPs omit `artifacts/`. If you already have the five frozen UI10V files locally, build a complete **local-use** package from this source checkout:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\build_local_windows.ps1 -ArtifactsDir C:\path\to\frozen-ui10v
+```
+
+The script builds the EXE, checks all five artifact hashes, loads the matching libusb DLL, and creates `local\n986b-twrp-ramboot-local-complete.zip`. Unzip it before running the EXE; the payload is under `artifacts/` beside the executable. Keep that ZIP local because it contains third-party recovery and device-derived bytes. A local build still needs a live run before that new EXE is described as phone-validated.
+
+## 1. Optional: capture a fresh Android receipt
 
 Install Google's Android SDK Platform-Tools so `adb` is on `PATH`, then keep
 stock Android running with one authorized ADB device connected:
@@ -30,7 +38,7 @@ stock Android running with one authorized ADB device connected:
 .\N986B-TWRP-RAMBOOT.exe prepare --receipt .\private\adb.json --adb adb
 ```
 
-The command reads `ro.product.model`, bootloader, warranty bit, Verified Boot state and Debug High. It stores the connected device's serial **only in the local private receipt** so the run can be tied to the current handset. The receipt expires after 15 minutes; rerun `prepare` to replace it with a fresh receipt. Do not upload it. `prepare` does not enter Fastboot or write to the phone.
+The command reads `ro.product.model`, bootloader, warranty bit, Verified Boot state and Debug High. It stores the connected device's serial **only in the local private receipt** so the run can be tied to the current handset. The receipt expires after 15 minutes; rerun `prepare` to replace it with a fresh receipt. Do not upload it. `prepare` does not enter Fastboot or write to the phone. If there is no receipt, interactive `launch` can proceed from Fastboot after the operator confirms the pinned profile. The EXE cannot independently verify the bootloader hash in Fastboot.
 
 Then enter S-Boot Fastboot:
 
@@ -38,7 +46,7 @@ Then enter S-Boot Fastboot:
 adb reboot bootloader
 ```
 
-The tested phone shows `entering fastboot mode...`; Windows sees USB `18D1:0002`. This endpoint must be accessible through WinUSB/libusb. The preparation receipt proves the Android profile before the mode change; the launcher cannot re-read Android properties after Fastboot entry.
+The tested phone shows `entering fastboot mode...`; Windows sees USB `18D1:0002`. This endpoint must be accessible through WinUSB/libusb. An optional preparation receipt records the Android profile before the mode change; the launcher cannot re-read Android properties after Fastboot entry.
 
 ## 2. Check the frozen package
 
@@ -60,7 +68,7 @@ With the tested phone already in Fastboot, double-click the EXE or run its inter
 .\N986B-TWRP-RAMBOOT.exe launch
 ```
 
-The launcher validates the fresh Android receipt, both pinned prior A/B evidence files and the exact FD/stream before opening USB. It prints the profile and image hash and asks you to type `BOOT N986B`. It then performs the nine setup transfers, 162,560 separate 512-byte data transfers and one `UEFITERM` transfer. Its receipt distinguishes an acknowledged terminal transfer from a device disconnect after the payload. A completed host payload is a transport result; confirm TWRP on the screen.
+The launcher validates both pinned prior A/B evidence files and the exact FD/stream before opening USB. It validates a fresh Android receipt if present; otherwise it records `operator_confirmed_fastboot_only`. It prints the profile and image hash and asks you to type `BOOT N986B`. It then performs the nine setup transfers, 162,560 separate 512-byte data transfers and one `UEFITERM` transfer. Its receipt distinguishes an acknowledged terminal transfer from a device disconnect after the payload. A completed host payload is a transport result; confirm TWRP on the screen.
 
 For scripted use, the equivalent explicit command is:
 
