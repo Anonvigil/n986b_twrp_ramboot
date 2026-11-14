@@ -24,6 +24,7 @@
         "license_reference": "SIMPLEINIT_LICENSE, upstream notices and source file headers"
       },
       "Platform/EFI_Binaries": {
+        "repository": "https://github.com/edk2-porting/edk2-msm-binary",
         "commit": "87ac13a39d88790fd1a7f4bf5550f14aa3d8ed15",
         "license_reference": "Upstream submodule notices and component-specific licenses"
       }

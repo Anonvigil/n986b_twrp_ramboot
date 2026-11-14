@@ -21,7 +21,7 @@ private/                          local receipts; never commit
 
 The FD and stream are required and their sizes/SHA-256 must match [`ui10v-public.json`](../evidence/ui10v-public.json). The stream contains TWRP userspace and is not redistributed here. The EXE does not create the image from the official `c2s` download. The [EFI](../sources/efi/README.md) and [stream](../sources/twrp/README.md) recipes describe how to rebuild from separately obtained, hash-checked inputs. The two evidence JSON files preserve the prior A/B gates from the successful development sequence.
 
-The public release ZIPs omit `artifacts/`. If you already have the five frozen UI10V files locally, build a complete **local-use** package from this source checkout:
+The public launcher ZIPs omit `artifacts/`. The exact successful EFI and FD are separate release assets; the remaining TWRP RAM stream and supporting files must be supplied locally. If you have all five frozen UI10V files, build a complete **local-use** package from this source checkout:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts\build_local_windows.ps1 -ArtifactsDir C:\path\to\frozen-ui10v

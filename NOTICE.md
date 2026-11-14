@@ -11,7 +11,10 @@ board tree and TianoCore components. Their copyright and redistribution terms
 are retained in source headers and [the board-tree license](sources/efi/UPSTREAM_LICENSE).
 The included SimpleInit modifications retain their LGPL-3.0-or-later notices;
 the license text is in [SIMPLEINIT_LICENSE](sources/efi/SIMPLEINIT_LICENSE).
-The stock ECT input used for the tested FD is not included in this repository.
+The raw stock ECT input is not committed to this repository. The separate
+successful EFI and FD release assets embed its bytes. They are not covered by
+this repository's MIT license; this project makes no claim that stock Samsung
+firmware data is freely redistributable.
 
 The linked [Team Win recovery source](https://github.com/TeamWin/android_bootable_recovery)
 and [official `c2s` image page](https://dl.twrp.me/c2s/) are separate upstream
