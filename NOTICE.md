@@ -9,6 +9,8 @@ logic were added for this experimental release candidate.
 The [EFI source overlay](sources/efi/README.md) derives from the Exynos EDK II
 board tree and TianoCore components. Their copyright and redistribution terms
 are retained in source headers and [the board-tree license](sources/efi/UPSTREAM_LICENSE).
+The included SimpleInit modifications retain their LGPL-3.0-or-later notices;
+the license text is in [SIMPLEINIT_LICENSE](sources/efi/SIMPLEINIT_LICENSE).
 The stock ECT input used for the tested FD is not included in this repository.
 
 The linked [Team Win recovery source](https://github.com/TeamWin/android_bootable_recovery)
