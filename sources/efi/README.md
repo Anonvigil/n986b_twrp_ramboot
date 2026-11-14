@@ -2,9 +2,9 @@
 
 This directory carries the N986B-specific EDK II source overlay for the
 RAM-booted TWRP GUI demonstration. It is scoped to the tested UI10V VTS-off
-firmware, not the earlier diagnostic variants. `overlay/` contains the exact
-UI10V application, its EDK II platform descriptions, the high-RAM memory map,
-the required platform changes, and 21 SimpleInit source changes. The upstream
+firmware, not the earlier diagnostic variants. `overlay/` contains the UI10V
+application, its EDK II platform descriptions, the high-RAM memory map,
+the required platform changes, and 22 SimpleInit source changes. The upstream
 EDK II tree and its submodules are pinned below instead of copied into this
 repository.
 
@@ -48,6 +48,12 @@ The pinned SimpleInit also requires its generated rootfs C/object files. The
 documented generator uses WSL with host GCC and `aarch64-linux-gnu-gcc`.
 The Python and PowerShell entry points use no machine-specific paths.
 
+The overlay removes the `destructor` attribute from SimpleInit's
+`fsdrv_deinitialize` in `src/filesystem/internal.c`. In the pinned toolchain,
+that attribute creates an allocated `.fini_array` with an AArch64 relative
+relocation that this EDK II `GenFw` cannot convert. This build adjustment has
+not been tested on the phone and changes the output from the frozen GUI demo.
+
 ```powershell
 git clone https://github.com/sonic011gamer/edk2-exynos.git edk2-exynos
 git -C edk2-exynos checkout c00035413a9df469414b31529640bf1da28859db
@@ -81,7 +87,7 @@ powershell -ExecutionPolicy Bypass -File sources/efi/build_ui10v.ps1 `
 Run these commands from this repository's root; the `edk2-exynos` clone may be
 placed elsewhere by changing `--tree` and `-Tree`. A short absolute path is
 recommended because EDK II generates deep build paths. The preparation step
-checks the top-level commit and each required submodule, overlays 40 source
+checks the top-level commit and each required submodule, overlays 41 source
 files, removes the superseded pinned `SimpleInit/include/uefi.h`, generates
 the private ECT C header, and creates `work/edk2-conf`. The build
 uses `DEBUG_CLANG38`, AARCH64, an FD base of `0x90000000`, and an FD size of
@@ -98,15 +104,17 @@ The tested frozen artifacts are labeled `N986B-TWRP-UI10V-VTS-OFF-RAM.fd`
 (SHA-256 `0ac10b5ae7ed996102d4ff74ee8f0d2002d57088fa804c93a1d2b271ebb06c01`)
 and `N986BUi10V.efi`
 (SHA-256 `a274548662f9c88167facf96e1bbe3aa0a7bedf2e2e0c7f589364af2abcd1fa5`).
-The script recreates the source configuration; matching these binary hashes
-also requires the exact toolchain, BaseTools, stock ECT, and build environment.
-A fresh independent build and hash match have not yet been demonstrated. In a
-clean clone, the source preparation and rootfs generation passed. A Windows FD
-build using the prior BaseTools executables stopped at `GenFw` converting
-`SimpleInitMain.dll`: `AARCH64 relative relocations require identical ELF and
-PE/COFF section offsets`. Replacing the freshly generated rootfs C/object with
-the prior build's generated files did not remove this error. The clean build
-must be fixed and both hashes checked before claiming reproducible binaries.
+The script recreates a buildable source configuration, not the exact frozen
+binary. A fresh independent EDK II source checkout, locally supplied stock ECT,
+newly generated SimpleInit rootfs, LLVM MinGW `20261020`, and previously built
+BaseTools executables completed the EFI and FD build on Windows. Its EFI
+SHA-256 was `6d9729b0e02ec2146a337a4e77a7f51db28a31e26974367a18b2c8908167fee9`;
+its FD SHA-256 was `33cb180240f9f9c753e35e86377972554159b466424459b3f8eb8b8f158f68d7`.
+Neither matches the frozen GUI demonstration above. This independently built
+variant has not been booted on the N986B. The BaseTools executables used for
+this check came from the earlier local build; their clean Windows compilation
+from the pinned source remains unverified. Do not label these outputs as the
+tested release binaries.
 
 ## Boot contract
 
