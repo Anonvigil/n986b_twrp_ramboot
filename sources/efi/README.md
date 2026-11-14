@@ -27,6 +27,9 @@ it locally and refuses a size or SHA-256 mismatch. Never commit the generated
 | LLVM MinGW toolchain | `llvm-mingw-20261020`, UCRT x86-64 Windows build |
 | Stock ECT, supplied separately | 307,200 bytes, SHA-256 `32a642074aa5168aede2cededf3af62c13cd20eb9212517fe517bfbfbbc70caa` |
 
+The pinned commits, license references, and hashes are also recorded in the
+machine-readable [source manifest](source-manifest.json).
+
 The upstream `Platform/EFI_Binaries` submodule contains a prebuilt
 `LinuxSimpleMassStorage.efi` referenced by the firmware volume. Its source is
 identified in that submodule's INF as
