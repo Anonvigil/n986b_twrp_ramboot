@@ -2,7 +2,7 @@
 
 RAM-booting TWRP 3.7.0 on the Exynos Galaxy Note20 Ultra (SM-N986B) through S-Boot Fastboot and UEFI, with build notes, validation evidence, and documented limitations.
 
-**한국어 요약:** `SM-N986B / N986BXXU0ATE3` 실기기에서 S-Boot Fastboot를 거쳐 UEFI와 Linux 복구 이미지를 RAM으로 실행했습니다. TWRP `3.7.0_11-0` 메뉴와 터치 조작을 확인했습니다. 이 시험 이미지에서는 저장장치를 비활성화했으며 Mount 목록은 비어 있습니다.
+The RAM handoff uses overlong USB `SET_SEL` handling observed on the pinned ATE3 S-Boot build to control a Fastboot memory-write and callback path. This is a device-local finding, not a stock `fastboot boot` command. See the [vulnerability analysis](docs/FASTBOOT_VULNERABILITY.md) for evidence and scope.
 
 ## Observed result
 
@@ -23,10 +23,11 @@ The [Mount screen](evidence/photos/twrp-mount.jpg) and [File Manager in `/dev`](
 ## Read in order
 
 1. [Porting design and memory map](docs/PORTING.md)
-2. [Exact tested profile and replay sequence](docs/REPLAY.md)
-3. [Evidence and limits](docs/EVIDENCE.md)
-4. [Inputs, provenance and publication status](docs/SOURCES_AND_RELEASE.md)
-5. [Windows x86, x64 and Arm64 builds and USB setup](docs/WINDOWS.md)
+2. [Observed S-Boot Fastboot vulnerability and its limits](docs/FASTBOOT_VULNERABILITY.md)
+3. [Exact tested profile and replay sequence](docs/REPLAY.md)
+4. [Evidence and limits](docs/EVIDENCE.md)
+5. [Inputs, provenance and publication status](docs/SOURCES_AND_RELEASE.md)
+6. [Windows x86, x64 and Arm64 builds and USB setup](docs/WINDOWS.md)
 
 Run `python scripts/verify_public_evidence.py` to check the staged photos and public evidence manifest. If you hold the original local build outputs, `python scripts/verify_public_evidence.py --artifacts <directory>` also verifies the frozen FD, stream, EFI, FDT and initramfs hashes. This command performs no device I/O.
 
