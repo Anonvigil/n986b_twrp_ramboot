@@ -23,6 +23,8 @@ SUBMODULE_COMMITS = {
 }
 ECT_SIZE = 0x4B000
 ECT_SHA256 = "32a642074aa5168aede2cededf3af62c13cd20eb9212517fe517bfbfbbc70caa"
+OLD_SIMPLEINIT_HEADER = "GPLDrivers/Library/SimpleInit/include/uefi.h"
+OLD_SIMPLEINIT_HEADER_SHA256 = "e71ca481395b2838ef3a7d2d9bc1feae7f9ac172920289d26a449b8de25b14bb"
 
 
 def git_head(path: Path) -> str:
@@ -69,11 +71,20 @@ def main() -> None:
             f"received {len(ect)} bytes and {digest}"
         )
 
+    old_header = tree / OLD_SIMPLEINIT_HEADER
+    if old_header.exists():
+        old_digest = hashlib.sha256(old_header.read_bytes()).hexdigest()
+        if old_digest != OLD_SIMPLEINIT_HEADER_SHA256:
+            raise SystemExit(f"Unexpected existing SimpleInit header: {old_header}")
+
     files = sorted(path for path in overlay.rglob("*") if path.is_file())
     for source in files:
         destination = tree / source.relative_to(overlay)
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(source, destination)
+
+    if old_header.exists():
+        old_header.unlink()
 
     ect_header = (
         tree

@@ -4,8 +4,9 @@ This directory carries the N986B-specific EDK II source overlay for the
 RAM-booted TWRP GUI demonstration. It is scoped to the tested UI10V VTS-off
 firmware, not the earlier diagnostic variants. `overlay/` contains the exact
 UI10V application, its EDK II platform descriptions, the high-RAM memory map,
-and the required platform changes. The upstream EDK II tree and its submodules
-are pinned below instead of copied into this repository.
+the required platform changes, and 21 SimpleInit source changes. The upstream
+EDK II tree and its submodules are pinned below instead of copied into this
+repository.
 
 The public source cannot produce the frozen binary by itself: the loader
 embeds a **stock N986B ECT** copied from the owner's device. That 0x4B000-byte
@@ -30,24 +31,48 @@ The upstream `Platform/EFI_Binaries` submodule contains a prebuilt
 identified in that submodule's INF as
 [BigfootACA/linux-simple-mass-storage](https://github.com/BigfootACA/linux-simple-mass-storage).
 Keep the upstream submodules and their license notices intact when publishing
-derived firmware. The EDK II board source is BSD-2-Clause; SimpleInit includes
-GPL components and other separately licensed libraries.
+derived firmware. The EDK II board source is BSD-2-Clause. The modified
+SimpleInit files carry LGPL-3.0-or-later notices; its license text is copied
+as [SIMPLEINIT_LICENSE](SIMPLEINIT_LICENSE). SimpleInit also contains other
+separately licensed libraries.
 
 ## Build on Windows
 
 Install Git, Python 3, LLVM MinGW `20261020`, GNU Make for Windows, and the
 EDK II BaseTools executables for Windows (`GenFv.exe`, `GenFw.exe`, `GenSec.exe`,
-and the other BaseTools programs). Build BaseTools from the pinned edk2 source
-if they are unavailable, following the
+and the other BaseTools programs). The pinned edk2 BaseTools version expects
+the Visual Studio host compiler for its Windows build. Build BaseTools from
+that pinned source if they are unavailable, following the
 [TianoCore Windows setup guide](https://www.tianocore.org/tianocore-wiki.github.io/build-tooling/environment-setup/windows_systems.html).
+The pinned SimpleInit also requires its generated rootfs C/object files. The
+documented generator uses WSL with host GCC and `aarch64-linux-gnu-gcc`.
 The Python and PowerShell entry points use no machine-specific paths.
 
 ```powershell
 git clone https://github.com/sonic011gamer/edk2-exynos.git edk2-exynos
 git -C edk2-exynos checkout c00035413a9df469414b31529640bf1da28859db
-git -C edk2-exynos submodule update --init --recursive
+git -C edk2-exynos submodule update --init
+git -C edk2-exynos/Common/edk2 submodule update --init
+git -C edk2-exynos/GPLDrivers/Library/SimpleInit submodule update --init
 
 python sources/efi/prepare_sources.py --tree edk2-exynos --ect C:\private\N986B-stock-ECT.bin
+```
+
+Inside WSL, with the clone accessible under `/mnt/c`, generate the pinned
+SimpleInit rootfs files before building the FD:
+
+```bash
+cd /mnt/c/path/to/edk2-exynos/GPLDrivers/Library/SimpleInit
+mkdir -p build
+HOSTCC=gcc CC=aarch64-linux-gnu-gcc \
+  bash scripts/gen-rootfs-source.sh "$PWD" "$PWD/build" "$PWD/root"
+```
+
+The expected `build/rootfs.bin` SHA-256 is
+`4c2e0dbd74ea546d7f0ae2af7ed6dccbde5bbb0fbf39152b5c89cc29c6ac63cd`.
+Return to PowerShell in this repository's root:
+
+```powershell
 powershell -ExecutionPolicy Bypass -File sources/efi/build_ui10v.ps1 `
   -Tree edk2-exynos -LlvmBin C:\toolchains\llvm-mingw-20261020\bin `
   -MakeExe C:\toolchains\make\make.exe
@@ -56,8 +81,9 @@ powershell -ExecutionPolicy Bypass -File sources/efi/build_ui10v.ps1 `
 Run these commands from this repository's root; the `edk2-exynos` clone may be
 placed elsewhere by changing `--tree` and `-Tree`. A short absolute path is
 recommended because EDK II generates deep build paths. The preparation step
-checks the top-level commit and each submodule, overlays 19 source files,
-generates the private ECT C header, and creates `work/edk2-conf`. The build
+checks the top-level commit and each required submodule, overlays 40 source
+files, removes the superseded pinned `SimpleInit/include/uefi.h`, generates
+the private ECT C header, and creates `work/edk2-conf`. The build
 uses `DEBUG_CLANG38`, AARCH64, an FD base of `0x90000000`, and an FD size of
 `0x700000`.
 
@@ -74,7 +100,13 @@ and `N986BUi10V.efi`
 (SHA-256 `a274548662f9c88167facf96e1bbe3aa0a7bedf2e2e0c7f589364af2abcd1fa5`).
 The script recreates the source configuration; matching these binary hashes
 also requires the exact toolchain, BaseTools, stock ECT, and build environment.
-A fresh independent build and hash match have not yet been demonstrated.
+A fresh independent build and hash match have not yet been demonstrated. In a
+clean clone, the source preparation and rootfs generation passed. A Windows FD
+build using the prior BaseTools executables stopped at `GenFw` converting
+`SimpleInitMain.dll`: `AARCH64 relative relocations require identical ELF and
+PE/COFF section offsets`. Replacing the freshly generated rootfs C/object with
+the prior build's generated files did not remove this error. The clean build
+must be fixed and both hashes checked before claiming reproducible binaries.
 
 ## Boot contract
 
@@ -91,7 +123,8 @@ restore, install, decryption, or block-device support from the GUI photos.
 
 ## Overlay provenance
 
-The overlay copies changed files from the tested UI10V source snapshot.
+The overlay copies changed files from the tested UI10V source snapshot,
+including the modified SimpleInit submodule files.
 Existing upstream files keep their original copyright headers. The original
 stock ECT byte array, generated build products, extracted device partitions,
 and unrelated diagnostic branches are excluded. Review upstream and
