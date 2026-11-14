@@ -1,8 +1,8 @@
 # TWRP/Linux input reconstruction
 
-`build_ui10v_stream.py` reconstructs the **exact tested UI10V RAM stream** from
-two inputs that are not committed here. It performs file operations only; it
-has no USB or device access. The generated stream matched the recorded
+`derive_base_dtb.py` and `build_ui10v_stream.py` reconstruct the **exact tested
+UI10V RAM stream** from two inputs that are not committed here. They perform
+file operations only; they have no USB or device access. The generated stream matched the recorded
 75,890,688-byte file at SHA-256
 `d1bfd029728be897f6bc5721e1c1abfcab41b0a84d5ca20591b8ea0911304f7b`.
 
@@ -11,29 +11,38 @@ has no USB or device access. The generated stream matched the recorded
 | Input | SHA-256 | Why it is needed |
 | --- | --- | --- |
 | Official Team Win `twrp-3.7.0_11-0-c2s.img` | `8a4dc7914d5ce0b6e2dae900433a853ad35a1606b5a94f3e9042ae85c6f2a771` | Contains the exact Linux kernel and TWRP recovery userspace used in the successful run. Obtain it from [Team Win's `c2s` page](https://dl.twrp.me/c2s/) and check the hash locally. |
-| Device-specific, already merged and storage-disabled base DTB | `78eae5000a548edca8e5ad80f73a1b28b2e443b9d26ddd10f7b0e84adac9f35c` | Contains the tested N986B memory map, overlay, and disabled `/ufs@0x13100000`, `/ufs-srpmb`, and `/dwmmc2@132E0000` nodes. This repository does not distribute this derived device binary. |
+| Live N986B FDT captured from the tested ATE3 device | `b0e8715a9dcfb55c393a7f1e6cb984e200b2b568ac1b152c1a8b40aae25009d1` | Supplies the 16 tested memory nodes and six additional reserved-memory nodes. It is a device-derived binary and is not distributed here. |
 
-The base DTB was prepared from the selected recovery device tree, overlay 4,
-and the N986B memory map, then edited to disable the three storage controllers.
-The hash is the input contract for this exact rebuild. A different N986B
-revision needs a separately measured DTB and cannot claim byte-for-byte
-equivalence with this UI10V run.
+The first script extracts DTB entry 0 and recovery DTBO entry 4 from the
+official image, merges them, copies only the tested live memory nodes and
+carveouts, adds three loader reservations, then disables `/ufs@0x13100000`,
+`/ufs-srpmb`, and `/dwmmc2@132E0000`. Its output is a 528,000-byte base DTB,
+SHA-256 `78eae5000a548edca8e5ad80f73a1b28b2e443b9d26ddd10f7b0e84adac9f35c`.
+Every intermediate stage has a pinned hash. A different N986B revision needs
+a separately measured FDT and cannot claim byte-for-byte equivalence with
+this UI10V run.
 
 ## Rebuild
 
-Install Python 3 and `fdtput` from `device-tree-compiler`. For example, run
+Install Python 3 and `fdtoverlay`, `fdtget`, `fdtput`, and `dtc` from
+`device-tree-compiler`. For example, run
 the following from a WSL/Linux shell in the repository root:
 
 ```sh
+python3 sources/twrp/derive_base_dtb.py \
+  --official-image /path/to/twrp-3.7.0_11-0-c2s.img \
+  --live-dtb /path/to/private-n986b-live.dtb \
+  --output-dir /path/to/private-output
+
 python3 sources/twrp/build_ui10v_stream.py \
   --official-image /path/to/twrp-3.7.0_11-0-c2s.img \
-  --base-dtb /path/to/n986b-storage-disabled-base.dtb \
+  --base-dtb /path/to/private-output/n986b-storage-disabled-base.dtb \
   --output-dir /path/to/private-output
 ```
 
 The script checks the input hashes, archive member count, original recovery
 executable, intermediate and final DTBs, final initrd, component placement,
-and the complete stream hash. It stops on a mismatch. Successful output:
+and the complete stream hash. They stop on a mismatch. Successful output:
 
 | File | Bytes | SHA-256 |
 | --- | ---: | --- |
@@ -43,17 +52,32 @@ and the complete stream hash. It stops on a mismatch. Successful output:
 
 ## What is source and what is an input
 
-The script contains the recovery init edits, deterministic gzip/newc
-repacking, FDT edits, manifest layout, and SHA-256 gates. The checked-in
+The scripts contain the DT overlay selection, memory-map merge, recovery init
+edits, deterministic gzip/newc repacking, FDT edits, manifest layout, and
+SHA-256 gates. The checked-in
 [`official-kernel.config`](official-kernel.config) is the configuration
 extracted from the tested kernel (SHA-256 of this text file:
 `8f9ef96d47f491b64ddb7c9c442e1fa70994eae9bfb68824d4e8db181acc680e`).
 It helps compare future kernel builds, but is not the kernel source or a proof
-that a newly compiled kernel is byte-identical. The exact kernel and recovery
-userspace source revisions used by the upstream image have not been established.
-[Team Win's recovery source](https://github.com/TeamWin/android_bootable_recovery)
-is available upstream, and the kernel source must be matched separately to
-the official recovery image before a source-only rebuild can be claimed.
+that a newly compiled kernel is byte-identical.
+
+The official image's kernel, DTB, and DTBO exactly match the three prebuilts
+in [Team Win's `c2s` device tree at commit `91dd8398`](https://github.com/TeamWin/android_device_samsung_c2s/tree/91dd8398f20b12ddf7690eaa461bb568eef67ed2/prebuilt).
+They also match the `c2s` files in
+[the upstream May 2022 kernel release](https://github.com/corsicanu/android_kernel_samsung_universal9830/releases/tag/20220520101352),
+whose source tag points to commit `f816c5f958be855d0269094d68267e3393fb9d2e`.
+The device tree's `BoardConfig.mk` takes the kernel, DTB, and DTBO as
+prebuilts. Its [build instructions](https://github.com/TeamWin/android_device_samsung_c2s/tree/91dd8398f20b12ddf7690eaa461bb568eef67ed2)
+use the Android 11 TWRP manifest, `lunch twrp_c2s-eng`, and `mka recoveryimage`.
+See [`source-manifest.json`](source-manifest.json) for pinned upstream inputs.
+
+A byte-identical **source** rebuild of the kernel remains unproven. The May
+tag's c2s defconfig and compiler stamp do not match the tested kernel's
+embedded config (Clang 14 in the source defconfig versus Clang 8 in the tested
+binary); the tagged `build_kernel.sh` targets `z3s`, not `c2s`. The complete
+Android build-manifest revision and the exact recovery userspace source commit
+used for the official image are likewise unverified. These are concrete gaps
+before claiming a source-only rebuild of the complete recovery image.
 
 The tested UEFI FD is built separately; see the EFI source recipe in this
 repository. Its original stock ECT input is not included. None of the image,

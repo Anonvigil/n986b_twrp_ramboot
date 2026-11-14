@@ -1,0 +1,66 @@
+{
+  "schema": 1,
+  "target": "SM-N986B / c2s / tested UI10V RAM stream",
+  "official_recovery_image": {
+    "version": "3.7.0_11-0",
+    "page": "https://dl.twrp.me/c2s/",
+    "release_date_utc": "2022-10-15T16:52:25Z",
+    "size": 57640960,
+    "sha256": "8a4dc7914d5ce0b6e2dae900433a853ad35a1606b5a94f3e9042ae85c6f2a771",
+    "distribution": "User-supplied only; Team Win does not permit mirrors without written permission"
+  },
+  "teamwin_device_tree": {
+    "repository": "https://github.com/TeamWin/android_device_samsung_c2s",
+    "commit": "91dd8398f20b12ddf7690eaa461bb568eef67ed2",
+    "match_proof": "Git blob IDs of all three prebuilts equal the corresponding files extracted from the tested recovery image",
+    "prebuilt_kernel": {
+      "git_blob_sha1": "a7e38385342136c9dbba8f27099c56222ac672ac",
+      "sha256": "ef275e198309a60ea20303645356d40f3e77a998df216f500208f858db843dc6"
+    },
+    "prebuilt_dtb": {
+      "git_blob_sha1": "d6636ec56a2d6bb3cb063dea490bb605929e9b1d",
+      "sha256": "d27bdfbd802bb68d17c984007f45d1b5cc4f19c973a890be48b4d4b5fe51df71"
+    },
+    "prebuilt_dtbo": {
+      "git_blob_sha1": "9bfdbe10d69995ead639a4b33d5b14f6911c4130",
+      "sha256": "ca639a5124012582aba62fd49f873359b85d46ec0e8a0e2aace3be46d265689b"
+    }
+  },
+  "kernel_source_candidate": {
+    "repository": "https://github.com/corsicanu/android_kernel_samsung_universal9830",
+    "release_tag": "20220520101352",
+    "tag_commit": "f816c5f958be855d0269094d68267e3393fb9d2e",
+    "release_prebuilts_zip_sha256": "731b79ad69a60225a0fb94c7440e79d2f392a670a1dd960b830f4266d3d1cbda",
+    "binary_provenance": "Exact kernel, DTB and DTBO match the release archive's c2s prebuilts",
+    "byte_identical_source_rebuild_proven": false,
+    "known_gaps": [
+      "Tagged c2s defconfig differs from tested kernel's embedded config",
+      "Tagged defconfig/compiler stamp uses Clang 14 while tested kernel config records Clang 8",
+      "Tagged build_kernel.sh targets z3s rather than c2s",
+      "Exact compiler, flags, build invocation and environment are not pinned"
+    ]
+  },
+  "recovery_source_candidate": {
+    "repository": "https://github.com/TeamWin/android_bootable_recovery",
+    "branch": "android-11",
+    "latest_commit_before_official_image_date": "d1b9a233e044f58fbc53d33ea5e25823438e48f2",
+    "exact_build_commit_proven": false
+  },
+  "android_build_manifest_candidate": {
+    "repository": "https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp",
+    "branch": "twrp-11",
+    "latest_commit_before_official_image_date": "48a1ac925fb112f09cfa6313932726b20125170d",
+    "exact_build_manifest_proven": false
+  },
+  "private_live_device_fdt": {
+    "sha256": "b0e8715a9dcfb55c393a7f1e6cb984e200b2b568ac1b152c1a8b40aae25009d1",
+    "committed": false
+  },
+  "reconstructed_storage_disabled_base_dtb": {
+    "sha256": "78eae5000a548edca8e5ad80f73a1b28b2e443b9d26ddd10f7b0e84adac9f35c"
+  },
+  "reconstructed_ui10v_stream": {
+    "bytes": 75890688,
+    "sha256": "d1bfd029728be897f6bc5721e1c1abfcab41b0a84d5ca20591b8ea0911304f7b"
+  }
+}
