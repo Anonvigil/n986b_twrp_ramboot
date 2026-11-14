@@ -58,7 +58,11 @@ jobs:
           $entry = $entries['${{ matrix.arch }}']
           $extract = Join-Path $PWD 'dist/libusb-extract'
           New-Item -ItemType Directory -Path $extract -Force | Out-Null
-          tar -xf $archive -C $extract $entry
+          $seven = Get-Command 7z.exe -ErrorAction SilentlyContinue
+          $sevenPath = if ($seven) { $seven.Source } else { Join-Path ${env:ProgramFiles} '7-Zip/7z.exe' }
+          if (!(Test-Path -LiteralPath $sevenPath)) { throw '7-Zip is required on the build runner' }
+          & $sevenPath x $archive $entry "-o$extract" -y | Out-Null
+          if ($LASTEXITCODE -ne 0) { throw '7-Zip extraction failed' }
           $native = Join-Path $extract $entry
           if (!(Test-Path -LiteralPath $native)) { throw 'native libusb DLL missing' }
           Copy-Item -LiteralPath $native -Destination 'dist/libusb-1.0.dll'
